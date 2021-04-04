@@ -33,7 +33,7 @@ public class StringConcatenation {
 		Instant end = Instant.now();
 		Duration total = Duration.between(start, end);
 		//System.out.println(s);
-		System.out.println("Time taken by concatenation : " + total.getSeconds());
+		System.out.println("Time taken by concatenation : " + total.getSeconds()); //0 seconds
 	}
 	
 	private static void byStringBuilder(int timeout) {
@@ -51,6 +51,6 @@ public class StringConcatenation {
 		Instant end = Instant.now();
 		Duration total = Duration.between(start, end);
 		//System.out.println(s.toString());
-		System.out.println("Time taken by StringBuilder : " + total.getSeconds());
+		System.out.println("Time taken by StringBuilder : " + total.getSeconds()); //25 seconds
 	}
 }

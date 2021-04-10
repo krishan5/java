@@ -5,6 +5,8 @@ import java.util.List;
 
 public class MovieApi {
 	
+	private MovieApi() {}
+	
 	private static List<Movie> movies;
 	
 	public static void loadMovies() {

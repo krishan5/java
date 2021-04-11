@@ -3,8 +3,8 @@ package com.kk.stream.intermediateOperations;
 import com.kk.stream.MovieApi;
 
 /**
- * Slicing is an intermediate operation of Stream to narrow down elements to be processed in further stream's operations.
- * Those elements which filtered out will not be proceed in further stream's operations.
+ * Slicing is an intermediate operation of Stream to allow some numbers of elements to be processed in further stream's operations.
+ * Those elements which not come in range of limit or want to be skipped will not be processed in further stream's operations.
  * Intermediate operations returns Stream objects.<br>
  * Following are Slicing operations:
  * <ul>

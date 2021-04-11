@@ -7,7 +7,7 @@ import com.kk.stream.MovieApi;
  * Matching is a terminal operation of Stream which returns boolean based on condition.
  * It takes Predicate as like filter operation. But difference is that filter is an intermediate operation and match is a terminal operation.
  * Its all terminal operations returns boolean and are Short-circuit operations.<br>
- * Following are Slicing operations:
+ * Following are Matching operations:
  * <ul>
  * <li>anyMatch(Predicate) :: return {@code true} if any elements match the condition. If any element found that matches the condition, then it will not processed rest of the elements and return result.</li>
  * <li>allMatch(Predicate) :: return {@code true} if all elements match the condition. If any element found that not matches the condition, then it will not processed rest of the elements and return result.</li>

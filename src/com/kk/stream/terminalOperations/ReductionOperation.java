@@ -31,7 +31,9 @@ public class ReductionOperation {
 	private static void reduceOperations() {
 		System.out.println("**************************reduce()***************************");
 		/**
+		 * reduce() method signature:
 		 * Optional<T> reduce(BinaryOperator<T> accumulator)
+		 * 
 		 * where accumulator is a function for combining two values.
 		 */
 		List<Movie> movies = MovieApi.getMovies();
@@ -40,7 +42,9 @@ public class ReductionOperation {
 			.ifPresent(m -> System.out.println("Oldest movie : " + m));
 		
 		/**
+		 * reduce() method signature:
 		 * OptionalInt reduce(IntBinaryOperator op)
+		 * 
 		 * where op is a function for combining two values.
 		 */
 		Arrays.stream(new int[] {4,6,2,9})
@@ -48,7 +52,9 @@ public class ReductionOperation {
 			.ifPresent(sum -> System.out.println("Sum of int : " + sum)); //Sum of int : 21
 		
 		/**
+		 * reduce() method signature:
 		 * T reduce(T identity, BinaryOperator<T> accumulator)
+		 * 
 		 * where identity is an initial value >> "" as identity -> ""+"kk" or "kk"+"" = "kk"
 		 * accumulator is a function for combining two values.
 		 */
@@ -62,7 +68,9 @@ public class ReductionOperation {
 		/**
 		 * BY SEQUENTIAL STREAM :
 		 * 
+		 * reduce() method signature:
 		 * <U> U reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
+		 * 
 		 * where identity is an initial value;
 		 * accumulator is a function for combining two values and one of its type;
 		 * combiner is a function for combining results of accumulator.
@@ -126,6 +134,7 @@ public class ReductionOperation {
 		/**
 		 * You can use any stream (SEQUENTIAL or PARALLEL), result will always be correct.
 		 * 
+		 * collect() method signature:
 		 * <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
 		 * where supplier is a mutable container;
 		 * accumulator is a consumer to combine the values but not returning anything;

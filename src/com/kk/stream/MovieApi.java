@@ -24,17 +24,20 @@ public class MovieApi {
 	}
 	
 	public static List<Movie> getMovies() {
-		if(movies!=null && !movies.isEmpty())
-			return movies;
-		else {
+		if(movies==null || movies.isEmpty())
 			loadMovies();
-			return movies;
-		}
+		return movies;
 	}
 	
 	public static void clear() {
 		if(movies!=null && !movies.isEmpty())
 			movies.clear();
+	}
+	
+	public static Movie getAnyMovie() {
+		if(movies==null || movies.isEmpty())
+			loadMovies();
+		return movies.stream().findAny().get();
 	}
 
 }

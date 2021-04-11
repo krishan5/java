@@ -29,16 +29,18 @@ public class FindingOperation {
 		
 		if( anyBaahubaliMovie.isPresent() )
 			System.out.println("Any = " + anyBaahubaliMovie.get()); //Any = Baahubali 2
+		else
+			System.out.println("Nothing found!");
 	}
 	
 	private static void findAll() {
-		Optional<Movie> latestBaahubaliMovie = MovieApi.getMovies()
+		Movie latestBaahubaliMovie = MovieApi.getMovies()
 				.stream()
-				.filter(movie -> movie.getName().contains("Baahubali"))
-				.findFirst();
+				.filter(movie -> movie.getName().contains("Baahubali 5"))
+				.findFirst()
+				.orElseGet(MovieApi::getAnyMovie); //If element is null then this orElseGet() will be executed. [Its lazy execution]
 		
-		if( latestBaahubaliMovie.isPresent() )
-			System.out.println("First = " + latestBaahubaliMovie.get()); //First = Baahubali 2
+		System.out.println("First = " + latestBaahubaliMovie); //First = Dangal
 	}
-
+	
 }

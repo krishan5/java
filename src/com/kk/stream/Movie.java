@@ -1,6 +1,6 @@
 package com.kk.stream;
 
-public class Movie {
+public class Movie implements Comparable<Movie> {
 	String name;
 	int releaseDate;
 	Language language;
@@ -46,6 +46,11 @@ public class Movie {
 	@Override
 	public String toString() {
 		return "Movie [name=" + name + ", releaseDate=" + releaseDate + ", language=" + language + "]";
+	}
+
+	@Override
+	public int compareTo(Movie o) {
+		return Integer.valueOf(releaseDate).compareTo(o.getReleaseDate());
 	}
 	
 }

@@ -2,6 +2,8 @@ package com.kk.stream.terminalOperations;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.kk.stream.Movie;
@@ -190,12 +192,66 @@ public class ReductionOperation {
 	}
 	
 	/**
-	 * collect() method is used to reduces stream into a single container. Example: List/Set/Map, StringBuilder, Summary Object.
+	 * {@code collect()} method is used to reduces stream into a single container. Example: List/Set/Map, StringBuilder, Summary Object.
 	 * What is Summary Object : If stream is a stream of numbers then the Summary Object can have list of summary values
 	 * (like sum, avg or max), all of them encapsulated in container called Summary Object.
+	 * <br>
+	 * One of its method take {@link Collectors} as a helper class which provides predefined reductions.
+	 * {@link java.util.stream.Collectors} returns the {@link java.util.stream.Collector} object to {@code collect()} method.
+	 * It internally provides supplier, accumulator and combiner to {@code collect()} method.
+	 * <br><br>{@code Collector<T,A,R>} :
+	 * where
+	 * <ul> 
+	 * <li>R is a container which is being returned</li>
+	 * <li>T is type of input stream element</li>
+	 * <li>A is accumulator type</li>
+	 * </ul>
+	 * Following are {@link java.util.stream.Collector} methods :
+	 * <ul>
+	 * <li>supplier() Supplier<A> : creates new container</li>
+	 * <li>accumulator() BiConsumer<A,T>: accumulates into container</li>
+	 * <li>combiner() BinaryOperator<A> : combines two result containers</li>
+	 * <li>finisher() Function<A,R> : optional : transform container object to another type</li>
+	 * </ul>
+	 * Following are predefined Collectors :
+	 * <ul>
+	 * <li>Collection : toList(), toSet(), toCollection(Supplier)</li>
+	 * <li>Grouping and Multi-level grouping : toMap(), groupingBy(), partitioningBy()</li>
+	 * <li>Reducing & Summarizing : maxBy(), summingInt(), averagingInt(), summarizingInt(), joining()</li>
+	 * </ul>
 	 */
 	private static void collectOperations() {
-		System.out.println("**************************collect()***************************");
+		System.out.println();
+		System.out.println("**************************collect(Collector)***************************");
+		System.out.println();
+		List<Movie> movies = MovieApi.getMovies();
+		
+		System.out.println("**************************collect(Collectors.toList())***************************");
+		movies.stream()
+			.map(movie -> movie.getName())
+			.collect(Collectors.toList())
+			.forEach(movieName -> System.out.println(movieName));
+		
+		System.out.println("**************************collect(Collectors.toSet())***************************");
+		movies.stream()
+			.map(movie -> movie.getLanguage())
+			.collect(Collectors.toSet()) //It is creating object of HashSet. //It internally uses hashCode() and equals() method
+			.forEach(movieLanguage -> System.out.println(movieLanguage));
+		
+		System.out.println("**************************collect(Collectors.toCollection(Supplier))***************************");
+		movies.stream()
+			.map(movie -> movie.getName())
+			.collect(Collectors.toCollection(() -> new TreeSet<>())) //If want to create object of your choice then use toCollection(). //TreeSet internally uses compareTo() method
+			.forEach(movieName -> System.out.println(movieName));
+		
+		System.out.println("**************************collect(Collectors.toMap())***************************");
+		movies.stream()
+			.collect(Collectors.toMap(Movie::getReleaseDate, //key
+					Function.identity(), //value
+					(m1,m2) -> m1.getReleaseDate() <= m2.getReleaseDate() ? m1 : m2)) //merger function. In case it face collision in keys, then this merger function helps in deciding which one to take up.
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
 	}
 
 }

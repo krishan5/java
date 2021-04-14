@@ -3,12 +3,17 @@ package com.kk.stream.terminalOperations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.kk.stream.Language;
 import com.kk.stream.Movie;
 import com.kk.stream.MovieApi;
 
@@ -220,7 +225,7 @@ public class ReductionOperation {
 	 * <ul>
 	 * <li>Collection : toList(), toSet(), toCollection(Supplier)</li>
 	 * <li>Grouping and Multi-level grouping : toMap(), groupingBy(), partitioningBy()</li>
-	 * <li>Reducing & Summarizing : maxBy(), summingInt(), averagingInt(), summarizingInt(), joining()</li>
+	 * <li>Reducing & Summarizing : minBy(), maxBy(), summingInt(), averagingInt(), summarizingInt(), joining()</li>
 	 * </ul>
 	 */
 	private static void collectOperations() {
@@ -327,12 +332,27 @@ public class ReductionOperation {
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.counting())***************************");
-		long count = movies.stream().collect(Collectors.counting());
-		System.out.println("Total movies = " + count);
+		long count = movies.stream().collect(Collectors.counting()); //Self-explanatory :P
+		System.out.println("Total movies = " + count); //Total movies = 10
 		
 		
 		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.minBy()))***************************");
+		Map<Language, Optional<Movie>> keyLanguage_valueMovieHasMininumMinutes_Map = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.minBy(Comparator.comparingInt(Movie::getMinutes))));
+		keyLanguage_valueMovieHasMininumMinutes_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.summarizingInt())***************************");
+		/**
+		 * Summarizing objects provide sum, min, max, count, average of given target. Example here is movie minutes.
+		 */
+		IntSummaryStatistics intSummaryStatistics = movies.stream()
+			.collect(Collectors.summarizingInt(Movie::getMinutes));
+		System.out.println("Movie minutes summary = " + intSummaryStatistics);
 	}
 
 }

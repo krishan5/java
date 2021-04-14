@@ -4,11 +4,13 @@ public class Movie implements Comparable<Movie> {
 	String name;
 	int releaseDate;
 	Language language;
+	int minutes;
 	
-	public Movie(String name, int releaseDate, Language language) {
+	public Movie(String name, int releaseDate, Language language, int minutes) {
 		this.name = name;
 		this.releaseDate = releaseDate;
 		this.language = language;
+		this.minutes = minutes;
 	}
 	
 	public String getName() {
@@ -19,6 +21,9 @@ public class Movie implements Comparable<Movie> {
 	}
 	public Language getLanguage() {
 		return language;
+	}
+	public int getMinutes() {
+		return minutes;
 	}
 
 	@Override
@@ -45,7 +50,8 @@ public class Movie implements Comparable<Movie> {
 
 	@Override
 	public String toString() {
-		return "Movie [name=" + name + ", releaseDate=" + releaseDate + ", language=" + language + "]";
+		return "Movie [name=" + name + ", releaseDate=" + releaseDate + ", language=" + language + ", minutes="
+				+ minutes + "]";
 	}
 
 	@Override

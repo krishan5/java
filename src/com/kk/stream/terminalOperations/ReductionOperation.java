@@ -323,6 +323,14 @@ public class ReductionOperation {
 		
 		
 		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.mapping()))***************************");
+		Map<Integer, List<String>> keyReleaseDate_valueMovieNameList_Map = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate, Collectors.mapping(Movie::getName, Collectors.toList())));
+		keyReleaseDate_valueMovieNameList_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
 		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.counting()))***************************");
 		movies.stream()
 			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.counting()))
@@ -353,6 +361,19 @@ public class ReductionOperation {
 		IntSummaryStatistics intSummaryStatistics = movies.stream()
 			.collect(Collectors.summarizingInt(Movie::getMinutes));
 		System.out.println("Movie minutes summary = " + intSummaryStatistics);
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.partitioningBy(Predicate))***************************");
+		/**
+		 * partitioningBy(Predicate) divide the whole list into 2 list on the basis of given condition (predicate) and key will be of boolean type.
+		 * true : Hindi, Punjabi movies list
+		 * false : Other all language type of movie list
+		 */
+		movies.stream()
+			.collect(Collectors.partitioningBy(m -> m.getLanguage() == Language.HINDI || m.getLanguage() == Language.PUNJABI))
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
 	}
 
 }

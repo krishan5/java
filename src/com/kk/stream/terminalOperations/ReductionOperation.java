@@ -1,7 +1,10 @@
 package com.kk.stream.terminalOperations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -221,35 +224,113 @@ public class ReductionOperation {
 	 * </ul>
 	 */
 	private static void collectOperations() {
-		System.out.println();
+		System.out.println();System.out.println();
 		System.out.println("**************************collect(Collector)***************************");
 		System.out.println();
+		
 		List<Movie> movies = MovieApi.getMovies();
 		
+		System.out.println();
 		System.out.println("**************************collect(Collectors.toList())***************************");
 		movies.stream()
 			.map(movie -> movie.getName())
 			.collect(Collectors.toList())
 			.forEach(movieName -> System.out.println(movieName));
 		
+		
+		
+		System.out.println();
 		System.out.println("**************************collect(Collectors.toSet())***************************");
 		movies.stream()
 			.map(movie -> movie.getLanguage())
 			.collect(Collectors.toSet()) //It is creating object of HashSet. //It internally uses hashCode() and equals() method
 			.forEach(movieLanguage -> System.out.println(movieLanguage));
 		
+		
+		
+		System.out.println();
 		System.out.println("**************************collect(Collectors.toCollection(Supplier))***************************");
 		movies.stream()
 			.map(movie -> movie.getName())
 			.collect(Collectors.toCollection(() -> new TreeSet<>())) //If want to create object of your choice then use toCollection(). //TreeSet internally uses compareTo() method
 			.forEach(movieName -> System.out.println(movieName));
 		
-		System.out.println("**************************collect(Collectors.toMap())***************************");
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.toMap(Function keyMapper, Function valueMapper, BinaryOperator mergeFunction))***************************");
+		/**
+		 * Use toMap() you want value as single value instead of list.
+		 */
 		movies.stream()
 			.collect(Collectors.toMap(Movie::getReleaseDate, //key
 					Function.identity(), //value
-					(m1,m2) -> m1.getReleaseDate() <= m2.getReleaseDate() ? m1 : m2)) //merger function. In case it face collision in keys, then this merger function helps in deciding which one to take up.
+					(m1,m2) -> m1.getReleaseDate() <= m2.getReleaseDate() ? m1 : m2)) //merger function. In case it face collision in keys, then this merger function helps in deciding which one value to take up.
 			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.toMap(Function keyMapper, Function valueMapper, BinaryOperator mergeFunction))***************************");
+		/**
+		 * Here we are forcing toMap() to create value as list. Its alternative method is groupingBy() explained just next of it. 
+		 */
+		movies.stream()
+			.collect(Collectors.toMap(Movie::getReleaseDate, //key
+					movie -> Collections.singletonList(movie), //value as List
+					(m1,m2) -> {
+						List<Movie> l = new ArrayList<>(m1);
+						l.addAll(m2);
+						return l;
+					})) //merger function. In case it face collision in keys, then this merger function helps in put another value into list. No value will be skipped as happened above.
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier))***************************");
+		/**
+		 * groupingBy() by design create key and value itself where map's value will be of List.
+		 */
+		movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate)) //It act same as above one in more clear way. By default it make List of map's value. But for developers, its hard to debug its internal working.
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collector downstream))***************************");
+		/**
+		 * groupingBy() by design create key and value itself where map's value will be of Set.
+		 */
+		movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate, Collectors.toSet())) //In 2nd parameter of Collectors, Here we are saying it to make Set of map's value. Above it was List by default.
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Supplier mapFactory, Collector downstream))***************************");
+		movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate, TreeMap::new, Collectors.toSet())) //Now, in 2nd parameter of Collectors, we are saying it to initialize Map of TreeMap. Above it was initializing map of HashMap by default. Rest is same as above.
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.counting()))***************************");
+		movies.stream()
+			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.counting()))
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.counting())***************************");
+		long count = movies.stream().collect(Collectors.counting());
+		System.out.println("Total movies = " + count);
+		
+		
 		
 		
 	}

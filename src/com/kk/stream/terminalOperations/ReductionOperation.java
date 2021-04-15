@@ -224,7 +224,7 @@ public class ReductionOperation {
 	 * Following are predefined Collectors :
 	 * <ul>
 	 * <li>Collection : toList(), toSet(), toCollection(Supplier)</li>
-	 * <li>Grouping and Multi-level grouping : toMap(), groupingBy(), partitioningBy()</li>
+	 * <li>Grouping and Multi-level grouping : toMap(), groupingBy(), groupingBy(Function classifier, Collectors.mapping()), partitioningBy()</li>
 	 * <li>Reducing & Summarizing : minBy(), maxBy(), summingInt(), averagingInt(), summarizingInt(), joining()</li>
 	 * </ul>
 	 */
@@ -233,6 +233,12 @@ public class ReductionOperation {
 		System.out.println("**************************collect(Collector)***************************");
 		System.out.println();
 		
+		collectorsForCollection();
+		collectorsForGroupingAndMultiLevelGrouping();
+		collectorsForReducingAndSummarizing();
+	}
+
+	private static void collectorsForCollection() {
 		List<Movie> movies = MovieApi.getMovies();
 		
 		System.out.println();
@@ -289,8 +295,12 @@ public class ReductionOperation {
 						return l;
 					})) //merger function. In case it face collision in keys, then this merger function helps in put another value into list. No value will be skipped as happened above.
 			.forEach((k,v) -> System.out.println(k + " -> " + v));
-		
-		
+	}
+	
+	
+
+	private static void collectorsForGroupingAndMultiLevelGrouping() {
+		List<Movie> movies = MovieApi.getMovies();
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.groupingBy(Function classifier))***************************");
@@ -331,6 +341,29 @@ public class ReductionOperation {
 		
 		
 		System.out.println();
+		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.groupingBy()))***************************");
+		Map<Integer, Map<Language, List<Movie>>> multiLevelMap = movies.stream()
+				.collect(Collectors.groupingBy(Movie::getReleaseDate, Collectors.groupingBy(Movie::getLanguage, Collectors.toList())));
+		multiLevelMap.forEach((k,v) -> System.out.println(k + " -> " + v));
+		
+		
+		
+		System.out.println();
+		System.out.println("**************************collect(Collectors.partitioningBy(Predicate))***************************");
+		/**
+		 * partitioningBy(Predicate) divide the whole list into 2 list on the basis of given condition (predicate) and key will be of boolean type.
+		 * true : Hindi, Punjabi movies list
+		 * false : Other all language type of movie list
+		 */
+		movies.stream()
+			.collect(Collectors.partitioningBy(m -> m.getLanguage() == Language.HINDI || m.getLanguage() == Language.PUNJABI))
+			.forEach((k,v) -> System.out.println(k + " -> " + v));
+	}
+
+	private static void collectorsForReducingAndSummarizing() {
+		List<Movie> movies = MovieApi.getMovies();
+		
+		System.out.println();
 		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.counting()))***************************");
 		movies.stream()
 			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.counting()))
@@ -361,19 +394,6 @@ public class ReductionOperation {
 		IntSummaryStatistics intSummaryStatistics = movies.stream()
 			.collect(Collectors.summarizingInt(Movie::getMinutes));
 		System.out.println("Movie minutes summary = " + intSummaryStatistics);
-		
-		
-		
-		System.out.println();
-		System.out.println("**************************collect(Collectors.partitioningBy(Predicate))***************************");
-		/**
-		 * partitioningBy(Predicate) divide the whole list into 2 list on the basis of given condition (predicate) and key will be of boolean type.
-		 * true : Hindi, Punjabi movies list
-		 * false : Other all language type of movie list
-		 */
-		movies.stream()
-			.collect(Collectors.partitioningBy(m -> m.getLanguage() == Language.HINDI || m.getLanguage() == Language.PUNJABI))
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
 	}
 
 }

@@ -82,7 +82,7 @@ public class ReductionOperation {
 		 * <U> U reduce(U identity, BiFunction<U,? super T,U> accumulator, BinaryOperator<U> combiner)
 		 * 
 		 * where identity is an initial value;
-		 * accumulator is a function for combining two values and one of its type;
+		 * accumulator is a function for combining two values and returns one/any of its type;
 		 * combiner is a function for combining results of accumulator.
 		 * 
 		 * Here T will be String and U will be StringBuilder to understand operations:
@@ -127,7 +127,7 @@ public class ReductionOperation {
 		 * and it will combine the same container with itself which lead to incorrect result.
 		 * 
 		 * Here, we are doing mutable reduction with reduce() which is not recommended
-		 * because reduce() is designed to perform mutable reduction.
+		 * because reduce() is not designed to perform mutable reduction.
 		 * Use collect() to perform mutable reduction which is designed for it.
 		 */
 		StringBuilder concatenation2 = Arrays.stream(new String[]{"A","B","C","D","E"})
@@ -142,7 +142,8 @@ public class ReductionOperation {
 		
 		
 		/**
-		 * You can use any stream (SEQUENTIAL or PARALLEL), result will always be correct.
+		 * Here is the solution of above problem in parallel stream :
+		 * In this way, you can use any stream (SEQUENTIAL or PARALLEL), result will always be correct.
 		 * 
 		 * collect() method signature:
 		 * <R> R collect(Supplier<R> supplier, BiConsumer<R, ? super T> accumulator, BiConsumer<R, R> combiner)
@@ -181,7 +182,7 @@ public class ReductionOperation {
 		
 		
 		/**
-		 * Making reduce() working correct with one modification:
+		 * Making reduce() working correct with one modification :
 		 * 
 		 * In accumulator, we created a new StringBuilder object and performing two append operation.
 		 * By doing this, we are not mutating same StringBuilder object again and again

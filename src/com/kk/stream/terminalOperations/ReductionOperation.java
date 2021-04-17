@@ -8,6 +8,7 @@ import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -201,7 +202,8 @@ public class ReductionOperation {
 	}
 	
 	/**
-	 * {@code collect()} method is used to reduces stream into a single container. Example: List/Set/Map, StringBuilder, Summary Object.
+	 * {@code collect()} method is used to reduces stream into a single container or single value.
+	 * Example: List/Set/Map, StringBuilder, Summary Object, count, max, sum, average.
 	 * What is Summary Object : If stream is a stream of numbers then the Summary Object can have list of summary values
 	 * (like sum, avg or max), all of them encapsulated in container called Summary Object.
 	 * <br>
@@ -244,28 +246,27 @@ public class ReductionOperation {
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.toList())***************************");
-		movies.stream()
+		List<String> movieNameList = movies.stream()
 			.map(movie -> movie.getName())
-			.collect(Collectors.toList())
-			.forEach(movieName -> System.out.println(movieName));
+			.collect(Collectors.toList());
+		movieNameList.forEach(movieName -> System.out.println(movieName));
 		
 		
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.toSet())***************************");
-		movies.stream()
+		Set<Language> movieLanguageSet = movies.stream()
 			.map(movie -> movie.getLanguage())
-			.collect(Collectors.toSet()) //It is creating object of HashSet. //It internally uses hashCode() and equals() method
-			.forEach(movieLanguage -> System.out.println(movieLanguage));
+			.collect(Collectors.toSet()); //It is creating object of HashSet. //It internally uses hashCode() and equals() method
+		movieLanguageSet.forEach(movieLanguage -> System.out.println(movieLanguage));
 		
 		
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.toCollection(Supplier))***************************");
-		movies.stream()
-			.map(movie -> movie.getName())
-			.collect(Collectors.toCollection(() -> new TreeSet<>())) //If want to create object of your choice then use toCollection(). //TreeSet internally uses compareTo() method
-			.forEach(movieName -> System.out.println(movieName));
+		TreeSet<Movie> movieTreeSet = movies.stream()
+			.collect(Collectors.toCollection(() -> new TreeSet<>())); //If want to create object initialization of your choice then use toCollection(). //TreeSet internally uses compareTo() method
+		movieTreeSet.forEach(movieName -> System.out.println(movieName));
 		
 		
 		
@@ -274,11 +275,11 @@ public class ReductionOperation {
 		/**
 		 * Use toMap() you want value as single value instead of list.
 		 */
-		movies.stream()
+		Map<Integer, Movie> keyReleaseDate_valueMovie_Map = movies.stream()
 			.collect(Collectors.toMap(Movie::getReleaseDate, //key
 					Function.identity(), //value
-					(m1,m2) -> m1.getReleaseDate() <= m2.getReleaseDate() ? m1 : m2)) //merger function. In case it face collision in keys, then this merger function helps in deciding which one value to take up.
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+					(m1,m2) -> m1.getReleaseDate() <= m2.getReleaseDate() ? m1 : m2)); //merger function. In case it face collision in keys, then this merger function helps in deciding which one value to take up.
+		keyReleaseDate_valueMovie_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
 		
 		
@@ -287,15 +288,15 @@ public class ReductionOperation {
 		/**
 		 * Here we are forcing toMap() to create value as list. Its alternative method is groupingBy() explained just next of it. 
 		 */
-		movies.stream()
+		Map<Integer, List<Movie>> keyReleaseDate_valueMovieList_Map = movies.stream()
 			.collect(Collectors.toMap(Movie::getReleaseDate, //key
 					movie -> Collections.singletonList(movie), //value as List
 					(m1,m2) -> {
 						List<Movie> l = new ArrayList<>(m1);
 						l.addAll(m2);
 						return l;
-					})) //merger function. In case it face collision in keys, then this merger function helps in put another value into list. No value will be skipped as happened above.
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+					})); //merger function. In case it face collision in keys, then this merger function helps in put another value into list. No value will be skipped as happened above.
+		keyReleaseDate_valueMovieList_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 	}
 	
 	
@@ -308,9 +309,9 @@ public class ReductionOperation {
 		/**
 		 * groupingBy() by design create key and value itself where map's value will be of List.
 		 */
-		movies.stream()
-			.collect(Collectors.groupingBy(Movie::getReleaseDate)) //It act same as above one in more clear way. By default it make List of map's value. But for developers, its hard to debug its internal working.
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		Map<Integer, List<Movie>> keyReleaseDate_valueMovieList_Map = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate)); //It act same as above one in more clear way. By default it make List of map's value. But for developers, its hard to debug its internal working.
+		keyReleaseDate_valueMovieList_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
 		
 		
@@ -319,17 +320,17 @@ public class ReductionOperation {
 		/**
 		 * groupingBy() by design create key and value itself where map's value will be of Set.
 		 */
-		movies.stream()
-			.collect(Collectors.groupingBy(Movie::getReleaseDate, Collectors.toSet())) //In 2nd parameter of Collectors, Here we are saying it to make Set of map's value. Above it was List by default.
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		Map<Integer, Set<Movie>> keyReleaseDate_valueMovieSet_Map = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate, Collectors.toSet())); //In 2nd parameter of Collectors, Here we are saying it to make Set of map's value. Above it was List by default.
+		keyReleaseDate_valueMovieSet_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
 		
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Supplier mapFactory, Collector downstream))***************************");
-		movies.stream()
-			.collect(Collectors.groupingBy(Movie::getReleaseDate, TreeMap::new, Collectors.toSet())) //Now, in 2nd parameter of Collectors, we are saying it to initialize Map of TreeMap. Above it was initializing map of HashMap by default. Rest is same as above.
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		Map<Integer, Set<Movie>> keyReleaseDate_valueMovieSet_TreeMap = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getReleaseDate, TreeMap::new, Collectors.toSet())); //Now, in 2nd parameter of Collectors, we are saying it to initialize Map of TreeMap. Above it was initializing map of HashMap by default. Rest is same as above.
+		keyReleaseDate_valueMovieSet_TreeMap.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
 		
 		
@@ -356,9 +357,9 @@ public class ReductionOperation {
 		 * true : Hindi, Punjabi movies list
 		 * false : Other all language type of movie list
 		 */
-		movies.stream()
-			.collect(Collectors.partitioningBy(m -> m.getLanguage() == Language.HINDI || m.getLanguage() == Language.PUNJABI))
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		Map<Boolean, List<Movie>> partitioningMap = movies.stream()
+			.collect(Collectors.partitioningBy(m -> m.getLanguage() == Language.HINDI || m.getLanguage() == Language.PUNJABI));
+		partitioningMap.forEach((k,v) -> System.out.println(k + " -> " + v));
 	}
 
 	private static void collectorsForReducingAndSummarizing() {
@@ -366,9 +367,9 @@ public class ReductionOperation {
 		
 		System.out.println();
 		System.out.println("**************************collect(Collectors.groupingBy(Function classifier, Collectors.counting()))***************************");
-		movies.stream()
-			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.counting()))
-			.forEach((k,v) -> System.out.println(k + " -> " + v));
+		Map<Language, Long> keyMovieLanguage_valueCount_Map = movies.stream()
+			.collect(Collectors.groupingBy(Movie::getLanguage, Collectors.counting()));
+		keyMovieLanguage_valueCount_Map.forEach((k,v) -> System.out.println(k + " -> " + v));
 		
 		
 		

@@ -1,5 +1,13 @@
 package com.kk.dateTime;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -59,6 +67,8 @@ public class DateTime {
 	 * </ul>
 	 */
 	private static void legacyDateTime() {
+		System.out.println("/******************************legacyDateTime()*****************************/");
+		System.out.println();
 		
 		java.util.Date currentDate = new java.util.Date();
 		System.out.println("Current Date :: " + currentDate);
@@ -91,11 +101,15 @@ public class DateTime {
 		
 		System.out.println(TimeZone.getDefault()); //sun.util.calendar.ZoneInfo[id="Asia/Calcutta",offset=19800000,dstSavings=0,useDaylight=false,transitions=7,lastRule=null]
 		
+		/**
+		 * You can uncomment and see long list of zone ids.
+		 * 
 		System.out.println();
 		System.out.println("All available TimeZone IDs : ");
 		for(String timeZoneId : TimeZone.getAvailableIDs())
 			System.out.println(timeZoneId);
 		System.out.println();
+		*/
 		
 		Calendar newYorkCalendar = new GregorianCalendar(TimeZone.getTimeZone("America/New_York"));
 		newYorkCalendar.set(2021, Calendar.APRIL, 18, 14, 45);
@@ -153,11 +167,50 @@ public class DateTime {
 	 * <li> LocalTime : 01:00 </li>
 	 * <li> LocalDateTime : 2021-04-18T01:00 </li>
 	 * <li> ZonedDateTime : 2021-04-18T01:00-7:00[America/Los_Angeles] </li>
-	 * <li> In case we deal with UTC/GMT instead of offset : 2021-04-18T01:00Z[UTC] : Z implies UTC/GMT </li>
+	 * <li> In case we deal with UTC/GMT instead of offset : 2021-04-18T01:00Z[UTC] : Z is printed in replacement of offset </li>
 	 * </ul>
 	 */
 	private static void java8DateTimeApi() {
+		System.out.println();
+		System.out.println("/******************************java8DateTimeApi()*****************************/");
+		System.out.println();
 		
+		LocalDate localDate = LocalDate.of(2021, Month.APRIL, 18);
+		System.out.println("LocalDate = " + localDate); //LocalDate = 2021-04-18
+		
+		LocalDate newLocalDate = localDate.plusMonths(7); //New DateTime API is threadsafe and immutable, hence it is returning new object here with modifications.
+		System.out.println("New LocalDate = " + newLocalDate);
+		
+		LocalTime localTime = LocalTime.of(2, 35, 56);
+		System.out.println("LocalTime = " + localTime); //LocalTime = 02:35:56
+		
+		LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+		System.out.println("LocalDateTime = " + localDateTime); //LocalDateTime = 2021-04-18T02:35:56
+		
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.of("America/New_York"));
+		System.out.println("ZonedDateTime = " + zonedDateTime); //ZonedDateTime = 2021-04-18T02:35:56-04:00[America/New_York]
+		
+		Instant startInstant = Instant.now();
+		performance();
+		Instant endInstant = Instant.now();
+		Duration duration = Duration.between(startInstant, endInstant);
+		System.out.println("Time taken by performance() via Instant.now() and Duration.between() : " + duration.getNano()); //0
+		
+		/**
+		 * Whenever you need to test performance, always use System.nanoTime() approach as it is meant for this case specially.
+		 */
+		long startNanoTime = System.nanoTime();
+		performance();
+		long endNanoTime = System.nanoTime();
+		System.out.println("Time taken by performance() via System.nanoTime() : " + (endNanoTime - startNanoTime)); //4700
+		
+	}
+	
+	private static void performance() {
+		String s = "";
+		for(int i=0; i < Integer.MAX_VALUE; i++) {
+			s+=i;
+		}
 	}
 
 }

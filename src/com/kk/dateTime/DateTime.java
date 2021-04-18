@@ -44,9 +44,20 @@ import java.util.TimeZone;
 public class DateTime {
 	
 	public static void main(String[] args) {
+		
 		legacyDateTime();
+		java8DateTimeApi();
+		
 	}
 
+	/**
+	 * Legacy classes from {@code java.util} package :
+	 * <ul>
+	 * <li>Date</li>
+	 * <li>Calendar</li>
+	 * <li>TimeZone</li>
+	 * </ul>
+	 */
 	private static void legacyDateTime() {
 		
 		java.util.Date currentDate = new java.util.Date();
@@ -64,7 +75,7 @@ public class DateTime {
 		//IST is timezone (Indian Standard Time)
 		
 		/**
-		 * Java introduce Calendar class, Gregorian Calendar (extends Calendar) and TimeZone in Java 1.1 to solve above problems.
+		 * Java introduce Calendar abstract class, Gregorian Calendar (extends Calendar) and TimeZone in Java 1.1 to solve above problems.
 		 * Still here, months starts from 0. Calendar and Date are not threadsafe. Calendar & Date confusing as they are doind similar kind of things.
 		 */
 		Calendar calendarDate = new GregorianCalendar(2021, 3, 18);
@@ -99,6 +110,53 @@ public class DateTime {
 		 */
 		System.out.println("newYorkCalendar.after(calendarDate) : " + newYorkCalendar.after(calendarDate)); //false
 		System.out.println("newYorkCalendar.before(calendarDate) : " + newYorkCalendar.before(calendarDate)); //true
+		
+	}
+	
+	/**
+	 * Commonly used java 8 DateTimeApi classes from {@code java.time} package :
+	 * <ul>
+	 * <li>LocalDate : It only supports Date. No support of Time and Timezone.</li>
+	 * <li>LocalTime : It only supports Time. No support of Date and Timezone.</li>
+	 * <li>LocalDateTime : It only supports Date and Time. No support of Timezone.</li>
+	 * <li>ZonedDateTime : It supports all i.e. Date, Time, Timezone. It is similar to GregorianCalendar class.</li>
+	 * <li>Instant : It is a single instantaneous point on the timeline.</li>
+	 * </ul>
+	 * 
+	 * All these classes implement an interface called "Temporal". Temporal means there is an involvement of concept of time.
+	 * Temporal also extends another interface called "TemporalAccessor" which contains only getters (as its name suggests 'accessor').
+	 * <br>
+	 * 
+	 * Following are more classes in {@code java.time} package which represents an amount of time :
+	 * <ul>
+	 * <li>Duration : It represents duration b/w two points of time. i.e, Duration b/w two instances of {@code Instant} class. Duration is associated with Time.</li>
+	 * <li>Period : It represents interval b/w two dates. Eg: Age is calculated using two dates. Period is associated with Date.</li>
+	 * </ul>
+	 * 
+	 * Duration and Period implements "TemporalAmount" interface.
+	 * <br>
+	 * 
+	 * ISO 8601 Format :
+	 * [date]T[time][zone offset]
+	 * Example: 2021-04-18T01:00-7:00[America/Los_Angeles]
+	 * where :
+	 * <ul>
+	 * <li> 2021-04-18 = [date] whose each component is separated by hyphen (-) </li>
+	 * <li> 01:00 = [time] which is 1 AM. Time component elements are separated by colon (:) </li>
+	 * <li> -7:00 = offset of UTC/GMT is minus 7 hours i.e. -7hrs </li>
+	 * <li> [America/Los_Angeles] = timezone </li>
+	 * </ul>
+	 * 
+	 * Lets see output of java 8 classes as per ISO 8601 Format :
+	 * <ul>
+	 * <li> LocalDate : 2021-04-18 </li>
+	 * <li> LocalTime : 01:00 </li>
+	 * <li> LocalDateTime : 2021-04-18T01:00 </li>
+	 * <li> ZonedDateTime : 2021-04-18T01:00-7:00[America/Los_Angeles] </li>
+	 * <li> In case we deal with UTC/GMT instead of offset : 2021-04-18T01:00Z[UTC] : Z implies UTC/GMT </li>
+	 * </ul>
+	 */
+	private static void java8DateTimeApi() {
 		
 	}
 

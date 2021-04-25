@@ -1,0 +1,111 @@
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging logOnFile
+INFO: /******************************* Without using configuration file ****************************/
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging log
+WARNING: warning message : Without using configuration file
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging log
+INFO: info message : Without using configuration file
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging log
+SEVERE: Throwing severe message : Without using configuration file
+java.lang.Exception
+	at com.kk.log.SimpleLogging.log(SimpleLogging.java:34)
+	at com.kk.log.SimpleLogging.logOnFile(SimpleLogging.java:57)
+	at com.kk.log.SimpleLogging.main(SimpleLogging.java:20)
+
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging log
+WARNING: another way of warning message : Without using configuration file
+Apr 25, 2021 7:05:03 PM com.kk.log.SimpleLogging log
+INFO: another way of info message : Without using configuration file
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2021-04-25T13:35:03.823073Z</date>
+  <millis>1619357703823</millis>
+  <nanos>73000</nanos>
+  <sequence>6</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>logUsingConfigurationFile</method>
+  <thread>1</thread>
+  <message>/******************************* Using configuration file ****************************/</message>
+</record>
+<record>
+  <date>2021-04-25T13:35:03.836079800Z</date>
+  <millis>1619357703836</millis>
+  <nanos>79800</nanos>
+  <sequence>7</sequence>
+  <logger>global</logger>
+  <level>WARNING</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>log</method>
+  <thread>1</thread>
+  <message>warning message : Using Configuration file</message>
+</record>
+<record>
+  <date>2021-04-25T13:35:03.837080400Z</date>
+  <millis>1619357703837</millis>
+  <nanos>80400</nanos>
+  <sequence>8</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>log</method>
+  <thread>1</thread>
+  <message>info message : Using Configuration file</message>
+</record>
+<record>
+  <date>2021-04-25T13:35:03.838082600Z</date>
+  <millis>1619357703838</millis>
+  <nanos>82600</nanos>
+  <sequence>9</sequence>
+  <logger>global</logger>
+  <level>SEVERE</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>log</method>
+  <thread>1</thread>
+  <message>Throwing severe message : Using Configuration file</message>
+  <exception>
+    <message>java.lang.Exception</message>
+    <frame>
+      <class>com.kk.log.SimpleLogging</class>
+      <method>log</method>
+      <line>34</line>
+    </frame>
+    <frame>
+      <class>com.kk.log.SimpleLogging</class>
+      <method>logUsingConfigurationFile</method>
+      <line>74</line>
+    </frame>
+    <frame>
+      <class>com.kk.log.SimpleLogging</class>
+      <method>main</method>
+      <line>21</line>
+    </frame>
+  </exception>
+</record>
+<record>
+  <date>2021-04-25T13:35:03.839075300Z</date>
+  <millis>1619357703839</millis>
+  <nanos>75300</nanos>
+  <sequence>10</sequence>
+  <logger>global</logger>
+  <level>WARNING</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>log</method>
+  <thread>1</thread>
+  <message>another way of warning message : Using Configuration file</message>
+</record>
+<record>
+  <date>2021-04-25T13:35:03.840072400Z</date>
+  <millis>1619357703840</millis>
+  <nanos>72400</nanos>
+  <sequence>11</sequence>
+  <logger>global</logger>
+  <level>INFO</level>
+  <class>com.kk.log.SimpleLogging</class>
+  <method>log</method>
+  <thread>1</thread>
+  <message>another way of info message : Using Configuration file</message>
+</record>
+</log>

@@ -11,14 +11,12 @@ import java.util.logging.SimpleFormatter;
 
 public class SimpleLogging {
 	
-	static Logger logger = Logger.getLogger(SimpleLogging.class.getName());
-	
 	public static void main(String[] args) {
 		
 		String fileName = "log.txt";
 		
-		logOnFile(fileName);
-		logUsingConfigurationFile(fileName);
+		logOnFileWithoutUsingConfigurationFile(fileName);
+		logOnFileUsingConfigurationFile(fileName);
 		
 	}
 	
@@ -41,7 +39,7 @@ public class SimpleLogging {
 		logger.info("another way of info message" + " : " + text);
 	}
 
-	private static void logOnFile(String fileName) {
+	private static void logOnFileWithoutUsingConfigurationFile(String fileName) {
 		try {
 			File file = new File(fileName);
 			//Create log.txt file if doesn't exist
@@ -54,6 +52,7 @@ public class SimpleLogging {
 			Logger logger = Logger.getLogger(SimpleLogging.class.getName());
 			logger.addHandler(fh);
 			logger.info("/******************************* Without using configuration file ****************************/");
+			
 			log(logger, "Without using configuration file");
 			
 		} catch (IOException e) {
@@ -61,7 +60,7 @@ public class SimpleLogging {
 		}
 	}
 	
-	private static void logUsingConfigurationFile(String fileName) {
+	private static void logOnFileUsingConfigurationFile(String fileName) {
 		//In case you have configuration file where logging is configured. This approach can be used.
 		try {
 			LogManager.getLogManager().readConfiguration(new FileInputStream(new File("myLogConfiguration.properties")));
@@ -71,7 +70,9 @@ public class SimpleLogging {
 			FileHandler fh = new FileHandler(fileName, true); //Append text in file on re-execution this code on log.txt
 			globalLogger.addHandler(fh);
 			globalLogger.info("/******************************* Using configuration file ****************************/");
+			
 			log(globalLogger, "Using Configuration file");
+			
 		} catch (SecurityException | IOException e) {
 			e.printStackTrace();
 		}

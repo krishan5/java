@@ -13,10 +13,11 @@ public class SimpleLogging {
 	
 	public static void main(String[] args) {
 		
-		String fileName = "log.txt";
+		String logFileName = "log.txt";
+		String configurationFileName = "myLogConfiguration.properties";
 		
-		logOnFileWithoutUsingConfigurationFile(fileName);
-		logOnFileUsingConfigurationFile(fileName);
+		logOnFileWithoutUsingConfigurationFile(logFileName);
+		logOnFileUsingConfigurationFile(logFileName, configurationFileName);
 		
 	}
 	
@@ -39,14 +40,14 @@ public class SimpleLogging {
 		logger.info("another way of info message" + " : " + text);
 	}
 
-	private static void logOnFileWithoutUsingConfigurationFile(String fileName) {
+	private static void logOnFileWithoutUsingConfigurationFile(String logFileName) {
 		try {
-			File file = new File(fileName);
+			File file = new File(logFileName);
 			//Create log.txt file if doesn't exist
 			if(!file.exists())
 				file.createNewFile();
 			
-			FileHandler fh = new FileHandler(fileName, false); //Not append text in file on re-execution this code on log.txt
+			FileHandler fh = new FileHandler(logFileName, false); //Not append text in file on re-execution this code on log.txt
 			fh.setFormatter(new SimpleFormatter());
 			
 			Logger logger = Logger.getLogger(SimpleLogging.class.getName());
@@ -60,14 +61,15 @@ public class SimpleLogging {
 		}
 	}
 	
-	private static void logOnFileUsingConfigurationFile(String fileName) {
+	private static void logOnFileUsingConfigurationFile(String logFileName, String configurationFileName) {
 		//In case you have configuration file where logging is configured. This approach can be used.
 		try {
-			LogManager.getLogManager().readConfiguration(new FileInputStream(new File("myLogConfiguration.properties")));
-			String property = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.formatter"); //DEBUGGING
+			LogManager.getLogManager().readConfiguration(new FileInputStream(new File(configurationFileName)));
+			String property = LogManager.getLogManager().getProperty("java.util.logging.FileHandler.formatter"); //java.util.logging.XMLFormatter
 			System.out.println(property);
+			
 			Logger globalLogger = Logger.getGlobal();
-			FileHandler fh = new FileHandler(fileName, true); //Append text in file on re-execution this code on log.txt
+			FileHandler fh = new FileHandler(logFileName, true); //Append text in file on re-execution this code on log.txt
 			globalLogger.addHandler(fh);
 			globalLogger.info("/******************************* Using configuration file ****************************/");
 			

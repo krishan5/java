@@ -18,7 +18,7 @@ public class FindingOperation {
 
 	public static void main(String[] args) {
 		findAny();
-		findAll();
+		findFirst();
 	}
 	
 	private static void findAny() {
@@ -33,7 +33,7 @@ public class FindingOperation {
 			System.out.println("Nothing found!");
 	}
 	
-	private static void findAll() {
+	private static void findFirst() {
 		Movie latestBaahubaliMovie = MovieApi.getMovies()
 				.stream()
 				.filter(movie -> movie.getName().contains("Baahubali 5"))
